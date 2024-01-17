@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "site-api"
+version = "0.1.0"
+description = ""
+authors = ["Mikhail Seliakov <selyakov.md@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = {extras = ["all"], version = "^0.109.0"}
+pytest = "^7.4.4"
+uvicorn = {extras = ["standard"], version = "^0.26.0"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
