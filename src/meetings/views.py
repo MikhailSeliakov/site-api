@@ -23,6 +23,11 @@ def get_info_meeting_by_id(meeting_id: Annotated[int, Path(..., ge=1)]):
     }
 
 
-@router.post("/create")
+@router.post("")
 def create_meeting():
+    return crud.create_meeting()
+
+
+@router.delete("/{meeting_id}")
+def delete_meeting_event():
     return crud.create_meeting()

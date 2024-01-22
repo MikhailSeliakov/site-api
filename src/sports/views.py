@@ -2,7 +2,7 @@ from typing import Annotated
 from fastapi import APIRouter, Path
 from src.sports import crud
 
-router = APIRouter(prefix="/api/v1/sport", tags=["Sports"])
+router = APIRouter(prefix="/api/v1/sports", tags=["Sports"])
 
 
 @router.get("")
@@ -23,6 +23,11 @@ def get_info_sport_by_id(sport_id: Annotated[int, Path(..., ge=1)]):
     }
 
 
-@router.post("/create")
+@router.post("")
 def create_sport_event():
+    return crud.create_sport_event()
+
+
+@router.delete("/{sport_id}")
+def delete_sport_event():
     return crud.create_sport_event()
