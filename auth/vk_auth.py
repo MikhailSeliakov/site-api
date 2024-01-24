@@ -19,8 +19,13 @@ URL = os.environ.get("BASE_URL")
 @router.get("")
 def get_vk_auth_link():
     request_uuid = uuid.uuid4()
-    query_string = f"uuid={request_uuid}&app_id={ID}&response_type=silent_token&redirect_uri={URL}"
+    query_string = f"uuid={request_uuid}&app_id={ID}&response_type=silent_token&redirect_uri={URL}/api/v1/oauth/redirect"
     base_link = "https://id.vk.com/auth?" + query_string
     return {
         "url": base_link
     }
+
+
+@router.get("/redirect")
+def handle_vk_credentials(payload):
+    print(payload)
