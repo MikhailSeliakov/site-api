@@ -9,6 +9,7 @@ from src.sports.views import router as sports_router
 from src.travels.views import router as travels_router
 from src.meetings.views import router as meetings_router
 from src.users.views import router as users_router
+from auth.vk_auth import router as vk_router
 
 fastapi_users = FastAPIUsers[User, int](
     get_user_manager,
@@ -21,6 +22,7 @@ app.include_router(sports_router)
 app.include_router(travels_router)
 app.include_router(meetings_router)
 app.include_router(users_router)
+app.include_router(vk_router)
 app.include_router(
     fastapi_users.get_auth_router(auth_backend),
     prefix="/auth/jwt",
