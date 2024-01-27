@@ -20,6 +20,11 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     id = Column(Integer, primary_key=True)
     phone_number = Column(Integer)
     username = Column(String)
+    first_name = Column(String(length=64))
+    last_name = Column(String(length=64))
+    patronymic_name = Column(String(length=64))
+    location = Column(String(length=64))
+    birth_date = Column(String(length=64))
     registered_at = Column(TIMESTAMP, default=datetime.utcnow)
     email: Mapped[str] = mapped_column(
         String(length=320), unique=True, index=True, nullable=False
