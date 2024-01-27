@@ -1,8 +1,8 @@
-"""add fastapi users
+"""Создание таблицы user
 
-Revision ID: a218dea79391
+Revision ID: fd221e5e0c66
 Revises: 
-Create Date: 2024-01-21 22:35:25.292579
+Create Date: 2024-01-27 16:28:55.174739
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'a218dea79391'
+revision: str = 'fd221e5e0c66'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -23,9 +23,13 @@ def upgrade() -> None:
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('phone_number', sa.Integer(), nullable=True),
-    sa.Column('username', sa.String(), nullable=True),
+    sa.Column('first_name', sa.String(length=64), nullable=True),
+    sa.Column('last_name', sa.String(length=64), nullable=True),
+    sa.Column('patronymic_name', sa.String(length=64), nullable=True),
+    sa.Column('location', sa.String(length=64), nullable=True),
+    sa.Column('birth_date', sa.String(length=64), nullable=True),
     sa.Column('registered_at', sa.TIMESTAMP(), nullable=True),
-    sa.Column('email', sa.String(length=320), nullable=False),
+    sa.Column('email', sa.String(length=320), nullable=True),
     sa.Column('hashed_password', sa.String(length=1024), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False),
     sa.Column('is_superuser', sa.Boolean(), nullable=False),
