@@ -42,10 +42,12 @@ def handle_vk_credentials(payload):
             "access_token": VK_SERVICE_KEY,
             "uuid": uuid_str,
         }
-        r = requests.get(link, params=payload_to_send)
-        print(r.text)
+        # r = requests.get(link, params=payload_to_send)
+        # print(r.text)
+        print({"response":{"access_token":"vk1.a.M4Y83lDVeQrCoY6RwdWz8bvZu1pbdpvC5MyQGuNenVyRJxZZ0Uze_qo0lvXqlpTudn-7pwvVY1R02VpNPgiNAUyDRIbAH5MZyKxnBhCPhqDvokukTGXI3OSimwm0Alu-T0pkS-IRmOopd8GXWH5INLMwiy0yWFrG2rlGUxcGOebw_asgsg9NjtlmPPyAzc_3n7oNBJiZGbgZ0SqkYDGhFA","access_token_id":"53550841","user_id":125604216,"additional_signup_required":False,"is_partial":False,"is_service":False,"source":1,"source_description":"Silent authentication","expires_in":31536000}})
+
         return RedirectResponse(
-            url=URL, status_code=status.HTTP_302_FOUND
+            url=URL
         )
     except Exception as e:
         return {
