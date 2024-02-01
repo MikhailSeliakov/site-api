@@ -8,3 +8,7 @@ class CreateUser(BaseModel):
 
 class Phone(BaseModel):
     phone: Annotated[str, StringConstraints(pattern=r'^7\d{10}$')]
+
+
+class Code(BaseModel):
+    code: int

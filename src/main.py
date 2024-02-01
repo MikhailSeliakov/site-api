@@ -5,6 +5,7 @@ sys.path.append(os.getcwd())
 import uvicorn
 from fastapi import FastAPI
 from auth.vk_auth import router as vk_router
+from auth.views import router as auth_router
 from sports.views import router as sports_router
 from travels.views import router as travels_router
 from meetings.views import router as meetings_router
@@ -17,6 +18,7 @@ app.include_router(travels_router)
 app.include_router(meetings_router)
 app.include_router(users_router)
 app.include_router(vk_router)
+app.include_router(auth_router)
 
 
 if __name__ == '__main__':
