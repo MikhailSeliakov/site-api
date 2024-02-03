@@ -12,5 +12,5 @@ async def login(phone_num: Phone, session: AsyncSession = Depends(get_async_sess
     jwt_token = await AuthService(phone_num, session).auth_by_phone()
     return {
         "accessToken": jwt_token,
-        "type": "Bearer"
+        "tokenType": "Bearer"
     }

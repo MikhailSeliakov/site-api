@@ -2,8 +2,17 @@ from typing import Annotated
 from pydantic import BaseModel, StringConstraints
 
 
-class CreateUser(BaseModel):
-    phone: str
+class UserSchema(BaseModel):
+    id: int
+    phone_number: str
+    first_name: str | None
+    last_name: str | None
+    patronymic_name: str | None
+    location: str | None
+    birth_date: str | None
+    about: str | None
+    is_active: bool
+    is_verified: bool
 
 
 class Phone(BaseModel):

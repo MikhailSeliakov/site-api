@@ -1,17 +1,21 @@
 import jwt
 from src.config import settings
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def encode_jwt(
         payload: dict,
         private_key: str = settings.auth_jwt.private_key_pem.read_text(),
         algorithm: str = settings.auth_jwt.algorithm,
-        expire_minutes: int = settings.auth_jwt.access_token_expire_minutes
+        expire_minutes: int = settings.auth_jwt.access_token_expire_minutes,
+        expire_timedelta: timedelta | None = None
 ):
     to_encode = payload.copy()
-    expire = expire_minutes
     now = datetime.utcnow()
+    if expire_timedelta:
+        expire = now + expire_timedelta
+    else:
+        expire = now + timedelta(minutes=expire_minutes)
     to_encode.update(
         exp=expire,
         iat=now
