@@ -1,6 +1,8 @@
 import jwt
-from src.config import settings
 from datetime import datetime, timedelta
+from jwt import PyJWTError
+from fastapi import HTTPException, status
+from src.config import settings
 
 
 def encode_jwt(
@@ -29,6 +31,8 @@ def decode_jwt(
         public_key: str = settings.auth_jwt.public_key_pem.read_text(),
         algorithm: str = settings.auth_jwt.algorithm
 ):
-    decoded = jwt.decode(jwt_token, public_key, algorithms=[algorithm])
-    return decoded
-
+    try:
+        decoded = jwt.decode(jwt_token, public_key, algorithms=[algorithm])
+        return decoded
+    except PyJWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Токен указан некорректно")
