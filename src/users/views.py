@@ -25,21 +25,16 @@ async def get_current_auth_user(
         payload: dict = Depends(get_current_token_payload),
         session: AsyncSession = Depends(get_async_session)
 ) -> UserSchema:
-    user = payload.get("sub")
-    query = select(users).where(users.c.id == user)
-    result = await session.execute(query)
-    query = select(users).where(users.c.id == user)
+    user_id = payload.get("sub")
+    query = select(users).where(users.c.id == user_id)
     result = await session.execute(query)
     user_obj = result.first()
-
-    if result.first() is None:
-        return False
-    return user_data
-    # raise HTTPException(
-    #     status_code=status.HTTP_401_UNAUTHORIZED,
-    #     detail="User not found",
-    #     headers={"X-uuid": str(uuid.uuid4())}
-    # )
+    if user_obj is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            headers={"X-uuid": uuid.uuid4().hex}
+        )
+    return user_obj
 
 
 @router.get("/me")

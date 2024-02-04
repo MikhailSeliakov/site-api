@@ -15,9 +15,10 @@ class UserSchema(BaseModel):
     is_verified: bool
 
 
-class Phone(BaseModel):
+class PhoneSchema(BaseModel):
     phone: Annotated[str, StringConstraints(pattern=r'^7\d{10}$')]
 
 
-class Code(BaseModel):
+class CodeSchema(BaseModel):
+    phone: Annotated[str, StringConstraints(pattern=r'^7\d{10}$')]
     code: int
