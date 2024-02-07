@@ -7,10 +7,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.users.models import users
 from src.database import get_async_session
-
+from src.users.service import UserService
 
 http_bearer = HTTPBearer()
-router = APIRouter(prefix="/profile", tags=["Auth"])
+router = APIRouter(prefix="/profile", tags=["Users"])
 
 
 async def get_current_token_payload(
@@ -25,7 +25,7 @@ async def get_current_auth_user(
         payload: dict = Depends(get_current_token_payload),
         session: AsyncSession = Depends(get_async_session)
 ) -> UserSchema:
-    user_id = payload.get("sub")
+    user_id: int = payload.get("sub")
     query = select(users).where(users.c.id == user_id)
     result = await session.execute(query)
     user_obj = result.first()
@@ -44,4 +44,17 @@ async def get_user_info(user: UserSchema = Depends(get_current_auth_user)):
         "firstName": user.first_name,
         "lastName": user.last_name,
         "about": user.about,
+    }
+
+
+@router.get("/{user_id}")
+async def get_user_info_by_id(user_id: int, session: AsyncSession = Depends(get_async_session)):
+    user = await UserService(session).get_profile_info(user_id)
+    return {
+        "userId": user[0],
+        "firstName": user[2],
+        "lastName": user[3],
+        "birthDate": user[6],
+        "about": user[7],
+        "location": user[5]
     }

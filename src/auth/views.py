@@ -19,7 +19,9 @@ async def login(phone_num: PhoneSchema, session: AsyncSession = Depends(get_asyn
 @router.post("/code")
 async def code_verify(body: CodeSchema, session: AsyncSession = Depends(get_async_session)):
     jwt_token = await CodeChallenge(body.phone, session).verify_code(body.code)
-    return {
+    # is_user_new = await
+    data = {
         "accessToken": jwt_token,
         "tokenType": "Bearer"
     }
+    return data

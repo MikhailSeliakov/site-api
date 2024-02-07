@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Dict
 from pydantic import BaseModel, StringConstraints
 
 
@@ -22,3 +22,21 @@ class PhoneSchema(BaseModel):
 class CodeSchema(BaseModel):
     phone: Annotated[str, StringConstraints(pattern=r'^7\d{10}$')]
     code: int
+
+
+class InterestSportSchema(BaseModel):
+    id: int
+    interest: str
+    is_active: bool
+
+
+class InterestMeetingSchema(BaseModel):
+    id: int
+    interest: str
+    is_active: bool
+
+
+class InterestTravelSchema(BaseModel):
+    id: int
+    interest: str
+    is_active: bool

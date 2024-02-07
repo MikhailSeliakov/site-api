@@ -22,7 +22,7 @@ class CodeChallenge:
         await self.session.execute(delete_stmt)
         stmt = insert(code_challenge).values(
             phone_number=self.phone,
-            code=randint(10000, 99999),
+            code=11111  # randint(10000, 99999),
         )
         await self.session.execute(stmt)
         await self.session.commit()

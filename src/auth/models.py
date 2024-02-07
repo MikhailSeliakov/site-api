@@ -10,6 +10,6 @@ code_challenge = Table(
     Column("id", Integer, primary_key=True),
     Column("phone_number", String(length=11)),
     Column("code", Integer),
-    Column("expire_time", TIMESTAMP, default=datetime.utcnow() + timedelta(minutes=15)),
+    Column("expire_time", TIMESTAMP, default=datetime.utcnow),
     Column("attempt", Integer, default=0),
 )
