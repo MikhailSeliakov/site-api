@@ -6,10 +6,10 @@ metadata = MetaData()
 
 
 sports = Table(
-    "sports",
+    "sports_events",
     metadata,
     Column("id", Integer, primary_key=True),
-    Column("created_by", Integer, nullable=False),
+    Column("created_by", Integer, primary_key=True, nullable=False),
     Column("location", String(length=64)),
     Column("date", String(length=64), nullable=False),
     Column("header", String(length=128)),
@@ -22,4 +22,13 @@ sports = Table(
     Column("is_online", Boolean, default=False, nullable=False),
     Column("created_at", TIMESTAMP, default=datetime.utcnow),
     Column("preferred_gender", Integer, default=2),
+)
+
+sports_interests = Table(
+    "sports_interests",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("interest", String),
+    Column("interest_ru", String),
+    Column("is_active", Boolean, nullable=False),
 )

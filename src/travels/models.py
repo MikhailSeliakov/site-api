@@ -6,10 +6,10 @@ metadata = MetaData()
 
 
 travels = Table(
-    "travels",
+    "travels_events",
     metadata,
-    Column("id", Integer, primary_key=True),
-    Column("created_by", Integer, nullable=False),
+    Column("id", Integer, primary_key=True, nullable=False),
+    Column("created_by", Integer, primary_key=True, nullable=False),
     Column("location_start", String(length=64)),
     Column("location_end", String(length=64)),
     Column("date_start", String(length=64), nullable=False),

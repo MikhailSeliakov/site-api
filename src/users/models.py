@@ -1,6 +1,7 @@
 from datetime import datetime
-from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP, Boolean
-
+from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP, Boolean, ForeignKey
+from src.sports.models import sports_interests
+from src.meetings.models import meetings_interests
 
 metadata = MetaData()
 
@@ -21,21 +22,10 @@ users = Table(
     Column("is_verified", Boolean, default=False, nullable=False),
 )
 
-
-meeting_interests = Table(
-    "meeting_interests",
+users_interests = Table(
+    "users_interests",
     metadata,
-    Column("id", Integer, primary_key=True),
-    Column("interest", String),
-    Column("interest_ru", String),
-    Column("is_active", Boolean),
-)
-
-sport_interests = Table(
-    "sport_interests",
-    metadata,
-    Column("id", Integer, primary_key=True),
-    Column("interest", String),
-    Column("interest_ru", String),
-    Column("is_active", Boolean),
+    Column("user_id", Integer, ForeignKey(users.c.id), primary_key=True),
+    Column("sport_interest_id", Integer, ForeignKey(sports_interests.c.id), primary_key=True),
+    Column("meeting_interest_id", Integer, ForeignKey(meetings_interests.c.id), primary_key=True)
 )

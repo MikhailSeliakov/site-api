@@ -1,5 +1,5 @@
 from typing import Annotated, Dict
-from pydantic import BaseModel, StringConstraints
+from pydantic import BaseModel, StringConstraints, Field
 
 
 class UserSchema(BaseModel):
@@ -21,22 +21,25 @@ class PhoneSchema(BaseModel):
 
 class CodeSchema(BaseModel):
     phone: Annotated[str, StringConstraints(pattern=r'^7\d{10}$')]
-    code: int
+    code: int = Field(..., ge=0, le=99999)
 
 
 class InterestSportSchema(BaseModel):
     id: int
     interest: str
+    interest_ru: str
     is_active: bool
 
 
 class InterestMeetingSchema(BaseModel):
     id: int
     interest: str
+    interest_ru: str
     is_active: bool
 
 
 class InterestTravelSchema(BaseModel):
     id: int
     interest: str
+    interest_ru: str
     is_active: bool

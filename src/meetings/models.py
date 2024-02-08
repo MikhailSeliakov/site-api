@@ -6,7 +6,7 @@ metadata = MetaData()
 
 
 meetings = Table(
-    "meetings",
+    "meetings_events",
     metadata,
     Column("id", Integer, primary_key=True),
     Column("created_by", Integer, nullable=False),
@@ -22,4 +22,13 @@ meetings = Table(
     Column("is_online", Boolean, default=False, nullable=False),
     Column("created_at", TIMESTAMP, default=datetime.utcnow),
     Column("preferred_gender", Integer, default=2),
+)
+
+meetings_interests = Table(
+    "meetings_interests",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("interest", String),
+    Column("interest_ru", String),
+    Column("is_active", Boolean, nullable=False),
 )

@@ -1,7 +1,9 @@
 from random import randint
 from fastapi import Depends, HTTPException, status
+
 from sqlalchemy import select, insert, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from src.auth.models import code_challenge
 from src.auth.utils import encode_jwt
 from src.users.models import users
@@ -27,7 +29,7 @@ class CodeChallenge:
         await self.session.execute(stmt)
         await self.session.commit()
 
-    async def verify_code(self, code: int):
+    async def verify_code(self, code: int) -> bool:
         query = (
             select(code_challenge)
             .where(code_challenge.c.phone_number == self.phone)
@@ -35,20 +37,11 @@ class CodeChallenge:
         )
         result = await self.session.execute(query)
         if result.fetchone() is None:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Проверочный код указан неверно"
-            )
+            return False
         upd_stmt = update(users).where(users.c.phone_number == self.phone).values(is_verified=True)
         await self.session.execute(upd_stmt)
         await self.session.commit()
-        query_user_id = select(users).where(users.c.phone_number == self.phone)
-        user_id = await self.session.execute(query_user_id)
-        jwt_payload = {
-            "sub": user_id.first()[0],
-            "phone": self.phone,
-        }
-        return encode_jwt(jwt_payload)
+        return True
 
 
 class AuthService:
@@ -65,3 +58,11 @@ class AuthService:
             await self.session.execute(stmt)
             await self.session.commit()
         await CodeChallenge(phone=self.phone, session=self.session).start_code_challenge()
+
+    @staticmethod
+    async def get_jwt_token_by_user_id(user_id: int, phone: str):
+        jwt_payload = {
+            "sub": user_id,
+            "phone": phone,
+        }
+        return encode_jwt(jwt_payload)
