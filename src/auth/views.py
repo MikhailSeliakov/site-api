@@ -14,7 +14,9 @@ async def login(phone_num: PhoneSchema, session: AsyncSession = Depends(get_asyn
     await AuthService(phone_num, session).auth_by_phone()
     return {
         "success": True,
-        "status": "Code challenge"
+        "data": {
+            "status": "Code challenge"
+        }
     }
 
 
@@ -36,7 +38,10 @@ async def code_verify(body: CodeSchema, session: AsyncSession = Depends(get_asyn
     jwt_token = await AuthService.get_jwt_token_by_user_id(user_id, body.phone)
     is_user_new = await user_service.is_user_new_reg(user_id)
     return {
-        "accessToken": jwt_token,
-        "tokenType": "Bearer",
-        "isNewUser": is_user_new
+        "success": True,
+        "data": {
+            "accessToken": jwt_token,
+            "tokenType": "Bearer",
+            "isNewUser": is_user_new
+        }
     }

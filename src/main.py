@@ -16,7 +16,7 @@ app = FastAPI(title="Да! Погнали)")
 # app.include_router(sports_router)
 # app.include_router(travels_router)
 # app.include_router(meetings_router)
-# app.include_router(users_router)
+app.include_router(users_router)
 # app.include_router(vk_router)
 app.include_router(auth_router)
 

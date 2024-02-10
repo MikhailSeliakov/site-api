@@ -9,7 +9,7 @@ meetings = Table(
     "meetings_events",
     metadata,
     Column("id", Integer, primary_key=True),
-    Column("created_by", Integer, nullable=False),
+    Column("created_by", Integer, primary_key=True, nullable=False),
     Column("location", String(length=64)),
     Column("date", String(length=64), nullable=False),
     Column("header", String(length=128)),
@@ -28,7 +28,7 @@ meetings_interests = Table(
     "meetings_interests",
     metadata,
     Column("id", Integer, primary_key=True),
-    Column("interest", String),
-    Column("interest_ru", String),
+    Column("interest", String, unique=True),
+    Column("interest_ru", String, unique=True),
     Column("is_active", Boolean, nullable=False),
 )

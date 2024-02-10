@@ -28,7 +28,7 @@ sports_interests = Table(
     "sports_interests",
     metadata,
     Column("id", Integer, primary_key=True),
-    Column("interest", String),
-    Column("interest_ru", String),
+    Column("interest", String, unique=True),
+    Column("interest_ru", String, unique=True),
     Column("is_active", Boolean, nullable=False),
 )

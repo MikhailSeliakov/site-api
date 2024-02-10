@@ -10,7 +10,7 @@ users = Table(
     "users",
     metadata,
     Column("id", Integer, primary_key=True),
-    Column("phone_number", String(length=11)),
+    Column("phone_number", String(length=11), unique=True),
     Column("first_name", String(length=64)),
     Column("last_name", String(length=64)),
     Column("patronymic_name", String(length=64)),
@@ -22,10 +22,18 @@ users = Table(
     Column("is_verified", Boolean, default=False, nullable=False),
 )
 
-users_interests = Table(
-    "users_interests",
+users_meetings_interests = Table(
+    "users_meetings_interests",
     metadata,
     Column("user_id", Integer, ForeignKey(users.c.id), primary_key=True),
-    Column("sport_interest_id", Integer, ForeignKey(sports_interests.c.id), primary_key=True),
-    Column("meeting_interest_id", Integer, ForeignKey(meetings_interests.c.id), primary_key=True)
+    Column("interest", String, ForeignKey(meetings_interests.c.interest), primary_key=True),
+    Column("added_at", TIMESTAMP, default=datetime.utcnow)
+)
+
+users_sports_interests = Table(
+    "users_sports_interests",
+    metadata,
+    Column("user_id", Integer, ForeignKey(users.c.id), primary_key=True),
+    Column("interest", String, ForeignKey(sports_interests.c.interest), primary_key=True),
+    Column("added_at", TIMESTAMP, default=datetime.utcnow)
 )

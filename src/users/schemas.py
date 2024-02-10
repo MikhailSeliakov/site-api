@@ -1,4 +1,4 @@
-from typing import Annotated, Dict
+from typing import Annotated, Optional
 from pydantic import BaseModel, StringConstraints, Field
 
 
@@ -24,22 +24,6 @@ class CodeSchema(BaseModel):
     code: int = Field(..., ge=0, le=99999)
 
 
-class InterestSportSchema(BaseModel):
-    id: int
-    interest: str
-    interest_ru: str
-    is_active: bool
-
-
-class InterestMeetingSchema(BaseModel):
-    id: int
-    interest: str
-    interest_ru: str
-    is_active: bool
-
-
-class InterestTravelSchema(BaseModel):
-    id: int
-    interest: str
-    interest_ru: str
-    is_active: bool
+class UserInterests(BaseModel):
+    meetings: Optional[list]
+    sports: Optional[list]
