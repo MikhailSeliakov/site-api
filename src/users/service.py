@@ -1,6 +1,6 @@
 import uuid
-
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, Depends
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import JSONResponse
 from sqlalchemy import select, insert, delete
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,6 +8,34 @@ from src.users.models import users, users_sports_interests, users_meetings_inter
 from src.meetings.models import meetings_interests
 from src.sports.models import sports_interests
 from src.users.schemas import UserSchema, UserInterests
+from src.auth.utils import decode_jwt
+from src.database import get_async_session
+
+http_bearer = HTTPBearer()
+
+
+async def get_current_token_payload(
+        credentials: HTTPAuthorizationCredentials = Depends(http_bearer)
+):
+    token = credentials.credentials
+    payload = decode_jwt(token)
+    return payload
+
+
+async def get_current_auth_user(
+        payload: dict = Depends(get_current_token_payload),
+        session: AsyncSession = Depends(get_async_session)
+) -> UserSchema:
+    user_id: int = payload.get("sub")
+    query = select(users).where(users.c.id == user_id)
+    result = await session.execute(query)
+    user_obj = result.first()
+    if user_obj is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            headers={"X-uuid": uuid.uuid4().hex}
+        )
+    return user_obj
 
 
 class UserService:
@@ -28,6 +56,29 @@ class UserService:
         result = await self.session.execute(query)
         data = result.mappings().first()
         return data
+
+    async def get_user_interests(self, user_id: int):
+        query_meetings = (
+            select(
+                users_meetings_interests.c.user_id,
+                users_meetings_interests.c.interest,
+                meetings_interests.c.interest_ru
+            )
+            .join(meetings_interests, users_meetings_interests.c.interest == meetings_interests.c.interest)
+            .where(users_meetings_interests.c.user_id == user_id)
+        )
+        query_sports = (
+            select(
+                users_sports_interests.c.user_id, users_sports_interests.c.interest, sports_interests.c.interest_ru
+            )
+            .join(sports_interests, users_sports_interests.c.interest == sports_interests.c.interest)
+            .where(users_sports_interests.c.user_id == user_id)
+        )
+        result_meetings = await self.session.execute(query_meetings)
+        result_sports = await self.session.execute(query_sports)
+        user_interests_meetings = [item.get("interest_ru") for item in result_meetings.mappings().all()]
+        user_interests_sports = [item.get("interest_ru") for item in result_sports.mappings().all()]
+        return user_interests_meetings, user_interests_sports
 
     async def is_user_new_reg(self, user_id: int) -> bool:
         query = select(users_meetings_interests).where(users_meetings_interests.c.user_id == user_id)
