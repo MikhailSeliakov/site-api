@@ -11,32 +11,26 @@ router = APIRouter(prefix="/api/v1/meetings", tags=["Meetings"])
 
 
 @router.get("")
-def get_available_meetings():
-    return {
-        "meetingId": [
-            "Item1",
-            "Item2",
-            "Item3",
-        ]
-    }
+async def get_available_meetings(session: AsyncSession = Depends(get_async_session)):
+    return await MeetingService(session).get_available_meetings()
 
 
 @router.get("/{meeting_id}")
-def get_info_meeting_by_id(meeting_id: Annotated[int, Path(..., ge=1)]):
+async def get_info_meeting_by_id(meeting_id: Annotated[int, Path(..., ge=1)]):
     return {
         "meetingId": meeting_id
     }
 
 
 @router.post("")
-def create_meeting(
+async def create_meeting(
         meeting_info: CreateMeetingSchema,
         user: UserSchema = Depends(get_current_auth_user),
         session: AsyncSession = Depends(get_async_session),
 ):
-    return MeetingService(session).create_meeting(user.id, meeting_info)
+    return await MeetingService(session).create_meeting(user.id, meeting_info)
 
 
 @router.delete("/{meeting_id}")
-def delete_meeting_event():
+async def delete_meeting_event():
     return {}

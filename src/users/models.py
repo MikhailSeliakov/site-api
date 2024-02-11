@@ -1,7 +1,5 @@
 from datetime import datetime
 from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP, Boolean, ForeignKey
-from src.sports.models import sports_interests
-from src.meetings.models import meetings_interests
 
 metadata = MetaData()
 
@@ -9,8 +7,8 @@ metadata = MetaData()
 users = Table(
     "users",
     metadata,
-    Column("id", Integer, primary_key=True),
-    Column("phone_number", String(length=11), unique=True),
+    Column("id", Integer, primary_key=True, unique=True, autoincrement=True),
+    Column("phone_number", String(length=11), primary_key=True, unique=True),
     Column("first_name", String(length=64)),
     Column("last_name", String(length=64)),
     Column("patronymic_name", String(length=64)),
@@ -22,6 +20,8 @@ users = Table(
     Column("is_verified", Boolean, default=False, nullable=False),
 )
 
+
+from src.meetings.models import meetings_interests
 users_meetings_interests = Table(
     "users_meetings_interests",
     metadata,
@@ -30,6 +30,8 @@ users_meetings_interests = Table(
     Column("added_at", TIMESTAMP, default=datetime.utcnow)
 )
 
+
+from src.sports.models import sports_interests
 users_sports_interests = Table(
     "users_sports_interests",
     metadata,

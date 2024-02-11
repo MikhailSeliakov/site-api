@@ -1,15 +1,15 @@
 from datetime import datetime
-from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP, Boolean
-
+from sqlalchemy import MetaData, Table, Column, Integer, String, TIMESTAMP, Boolean, ForeignKey
+from src.users.models import users
 
 metadata = MetaData()
 
 
-meetings = Table(
+meetings_events = Table(
     "meetings_events",
     metadata,
-    Column("id", Integer, primary_key=True),
-    Column("created_by", Integer, primary_key=True, nullable=False),
+    Column("id", Integer, primary_key=True, unique=True, autoincrement=True),
+    Column("created_by", Integer, ForeignKey(users.c.id), primary_key=True, nullable=False),
     Column("location", String(length=64)),
     Column("date", String(length=64), nullable=False),
     Column("header", String(length=128)),
@@ -31,4 +31,12 @@ meetings_interests = Table(
     Column("interest", String, unique=True),
     Column("interest_ru", String, unique=True),
     Column("is_active", Boolean, nullable=False),
+)
+
+meetings_events_interests = Table(
+    "meetings_events_interests",
+    metadata,
+    Column("event_id", Integer, ForeignKey(meetings_events.c.id), primary_key=True),
+    Column("interest", String, ForeignKey(meetings_interests.c.interest), primary_key=True),
+    Column("added_at", TIMESTAMP, default=datetime.utcnow),
 )

@@ -11,13 +11,16 @@ class InterestMeetingSchema(BaseModel):
 
 
 class CreateMeetingSchema(BaseModel):
+    """
+    Свойства указаны в camelCase т.к. фронт запросил такой формат.
+    """
     interests: list
-    is_online: bool
+    isOnline: bool
     location: Optional[str]
-    date_start: date
-    hour_start: int = Field(..., ge=0, le=23)
-    minute_start: int = Field(..., ge=0, le=59)
+    dateStart: date
+    hourStart: int = Field(..., ge=0, le=23)
+    minuteStart: int = Field(..., ge=0, le=59)
     header: str = Field(..., max_length=100)
-    about_meeting: str = Field(..., max_length=500)
-    required_age: str
-    preferred_gender: int = Field(..., ge=0, le=2)
+    aboutMeeting: str = Field(..., max_length=500)
+    requiredAge: str
+    preferredGender: int = Field(..., ge=0, le=2)
