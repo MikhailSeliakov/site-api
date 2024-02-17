@@ -8,15 +8,15 @@ from src.meetings.schemas import CreateMeetingSchema
 from src.users.service import UserService
 
 
+def to_camel_case(snake_str):
+    components = snake_str.split('_')
+    return components[0] + ''.join(x.title() for x in components[1:])
+
+
 class MeetingService:
 
     def __init__(self, session):
         self.session: AsyncSession = session
-
-    @staticmethod
-    def to_camel_case(snake_str):
-        components = snake_str.split('_')
-        return components[0] + ''.join(x.title() for x in components[1:])
 
     async def create_meeting(self, user_id: int, meeting_info: CreateMeetingSchema):
         available_meetings, available_sports = await UserService(self.session).get_available_interests()
@@ -69,14 +69,17 @@ class MeetingService:
                     meetings_events.c.header,
                     meetings_events.c.description,
                     meetings_events.c.preferred_gender,
-                )
-                .where(meetings_events.c.is_active == True)
+                    meetings_events_interests.c.interest
+                ).join(meetings_events_interests, meetings_events.c.id == meetings_events_interests.c.event_id)
+                .where(meetings_events.c.is_active)
                 .where(meetings_events.c.is_deleted == False)
                 .where(meetings_events.c.is_hidden == False)
             )
             result_query = await self.session.execute(get_active_events)
             available_meetings = result_query.mappings().all()
-            final_result = [{MeetingService.to_camel_case(key): value for key, value in item.items()} for item in available_meetings]
+            final_result = [{to_camel_case(key): value for key, value in item.items()} for item in available_meetings]
+            print(final_result)
+            # TODO: Сгруппировать по айди
             return JSONResponse(status_code=200, content={
                 "success": True,
                 "data": {
