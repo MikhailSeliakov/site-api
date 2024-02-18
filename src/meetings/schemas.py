@@ -1,5 +1,6 @@
 from datetime import date
-from typing import Optional
+from enum import Enum
+from typing import Optional, Literal
 from pydantic import BaseModel, Field
 
 
@@ -8,6 +9,12 @@ class InterestMeetingSchema(BaseModel):
     interest: str
     interest_ru: str
     is_active: bool
+
+
+class GenderOptions(Enum):
+    male = "male"
+    female = "female"
+    none = None
 
 
 class CreateMeetingSchema(BaseModel):
@@ -23,7 +30,7 @@ class CreateMeetingSchema(BaseModel):
     header: str = Field(..., max_length=100)
     aboutMeeting: str = Field(..., max_length=500)
     requiredAge: str
-    preferredGender: int = Field(..., ge=0, le=2)
+    preferredGender: GenderOptions
 
 
 class AvailableMeetingsSchema(BaseModel):

@@ -14,6 +14,8 @@ meetings_events = Table(
     Column("date", String(length=64), nullable=False),
     Column("header", String(length=128)),
     Column("description", String(length=2000)),
+    Column("hour_start", Integer, nullable=False),
+    Column("minutes_start", Integer, nullable=False),
     Column("is_active", Boolean, default=True, nullable=False),
     Column("is_promo", Boolean, default=False, nullable=False),
     Column("promo_type", Integer),
@@ -21,7 +23,7 @@ meetings_events = Table(
     Column("is_deleted", Boolean, default=False, nullable=False),
     Column("is_online", Boolean, default=False, nullable=False),
     Column("created_at", TIMESTAMP, default=datetime.utcnow),
-    Column("preferred_gender", Integer, default=2),
+    Column("preferred_gender", String),
 )
 
 meetings_interests = Table(

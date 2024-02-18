@@ -44,10 +44,12 @@ class MeetingService:
             location=meeting_info.location,
             date=meeting_info.dateStart.__str__(),
             header=meeting_info.header,
+            hour_start=meeting_info.hourStart,
+            minutes_start=meeting_info.minuteStart,
             description=meeting_info.aboutMeeting,
             is_online=meeting_info.isOnline,
             created_at=datetime.utcnow(),
-            preferred_gender=meeting_info.preferredGender,
+            preferred_gender=meeting_info.preferredGender.value,
         ).returning(meetings_events.c.id)
         created_event_id = await self.session.execute(stmt)
         created_event_id = created_event_id.first()[0]
@@ -73,6 +75,8 @@ class MeetingService:
                     meetings_events.c.location,
                     meetings_events.c.date,
                     meetings_events.c.header,
+                    meetings_events.c.hour_start,
+                    meetings_events.c.minutes_start,
                     meetings_events.c.description,
                     meetings_events.c.preferred_gender,
                     meetings_events_interests.c.interest
