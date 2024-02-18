@@ -24,3 +24,14 @@ class CreateMeetingSchema(BaseModel):
     aboutMeeting: str = Field(..., max_length=500)
     requiredAge: str
     preferredGender: int = Field(..., ge=0, le=2)
+
+
+class AvailableMeetingsSchema(BaseModel):
+    id: int
+    createdBy: int
+    location: str
+    date: date
+    header: str
+    description: str
+    preferredGender: int
+    interest: list

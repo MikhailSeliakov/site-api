@@ -1,4 +1,5 @@
 import uuid
+from collections import defaultdict
 from datetime import datetime
 from fastapi.responses import JSONResponse
 from sqlalchemy import select, insert
@@ -11,6 +12,11 @@ from src.users.service import UserService
 def to_camel_case(snake_str):
     components = snake_str.split('_')
     return components[0] + ''.join(x.title() for x in components[1:])
+
+
+def move_interest_to_end(dictionary):
+    interest = dictionary.pop('interest')
+    dictionary['interest'] = interest
 
 
 class MeetingService:
@@ -78,12 +84,22 @@ class MeetingService:
             result_query = await self.session.execute(get_active_events)
             available_meetings = result_query.mappings().all()
             final_result = [{to_camel_case(key): value for key, value in item.items()} for item in available_meetings]
-            print(final_result)
-            # TODO: Сгруппировать по айди
+            grouped_data = defaultdict(lambda: {'interest': []})
+
+            for item in final_result:
+                id_ = item['id']
+                grouped_data[id_].update({key: value for key, value in item.items() if key != 'interest'})
+                grouped_data[id_]['interest'].append(item['interest'])
+
+            final_data = list(grouped_data.values())
+
+            for item in final_data:
+                move_interest_to_end(item)
+
             return JSONResponse(status_code=200, content={
                 "success": True,
                 "data": {
-                    "meetings": final_result
+                    "meetings": final_data
                 }
             })
         except Exception:
